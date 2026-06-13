@@ -19,9 +19,39 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px;
+        }
+
+        nav {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-bottom: 40px;
+            font-size: 0.95rem;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255,255,255,0.08);
+            padding: 8px 18px;
+            border-radius: 50px;
+            transition: background 0.15s ease;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.18);
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 20px;
         }
 
         h1 {
@@ -34,6 +64,12 @@
             color: #ccc;
             margin-bottom: 30px;
             max-width: 400px;
+        }
+
+        .tokens {
+            color: #00ffcc;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
         button {
@@ -52,17 +88,51 @@
         button:hover {
             transform: translateY(-3px) scale(1.05);
         }
+
+        .flash {
+            background: rgba(255,0,0,0.2);
+            border: 1px solid #ff5555;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
     </style>
 </head>
 <body>
-    <h1>🎉 Crée ta fête</h1>
-    <p>
-        Clique sur le bouton pour créer un salon de fête privé.
-        Tu obtiendras un lien unique à partager avec tes amis !
-    </p>
 
-    <form action="/creer-salon" method="POST">
-        <button type="submit">Créer un salon</button>
-    </form>
+    <nav>
+        {% if current_user.is_authenticated %}
+            <span style="padding: 8px 0; color:#aaa;">👤 {{ current_user.username }}</span>
+            <a href="{{ url_for('logout') }}">Déconnexion</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Connexion</a>
+            <a href="{{ url_for('inscription') }}">Inscription</a>
+        {% endif %}
+    </nav>
+
+    <div class="content">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h1>🎉 Crée ta fête</h1>
+
+        {% if current_user.is_authenticated %}
+            <p class="tokens">Solde : {{ current_user.tokens }} jetons</p>
+            <p>Clique sur le bouton pour créer un salon de fête privé. Tu obtiendras un lien unique à partager avec tes amis !</p>
+            <form action="/creer-salon" method="POST">
+                <button type="submit">Créer un salon</button>
+            </form>
+        {% else %}
+            <p>Connecte-toi ou crée un compte pour pouvoir créer un salon de fête privé avec tes amis.</p>
+            <a href="{{ url_for('login') }}"><button type="button">Se connecter</button></a>
+        {% endif %}
+    </div>
+
 </body>
 </html>
