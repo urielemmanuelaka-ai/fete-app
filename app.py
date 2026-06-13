@@ -22,9 +22,6 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 
-# ----------------------------
-# Modèle de base de données
-# ----------------------------
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -43,9 +40,6 @@ def generate_room_code(length=6):
     return ''.join(secrets.choice(alphabet) for _ in range(length))
 
 
-# ----------------------------
-# Routes principales
-# ----------------------------
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -63,11 +57,11 @@ def inscription():
             return redirect(url_for('inscription'))
 
         if User.query.filter_by(email=email).first():
-            flash("Un compte existe déjà avec cet email.")
+            flash("Un compte existe deja avec cet email.")
             return redirect(url_for('inscription'))
 
         if User.query.filter_by(username=username).first():
-            flash("Ce nom d'utilisateur est déjà pris.")
+            flash("Ce nom d'utilisateur est deja pris.")
             return redirect(url_for('inscription'))
 
         new_user = User(
@@ -123,9 +117,6 @@ def salon(code):
     return render_template('room.html', room_code=code)
 
 
-# ----------------------------
-# SocketIO
-# ----------------------------
 @socketio.on('join')
 def handle_join(data):
     room_code = data.get('room')
@@ -136,18 +127,4 @@ def handle_join(data):
 @socketio.on('trigger_effect')
 def handle_effect(data):
     room_code = data.get('room')
-    effect = data.get('effect')
-    print(f"Effet '{effect}' déclenché dans le salon {room_code}")
-    emit('play_effect', {'effect': effect}, room=room_code)
-
-
-# ----------------------------
-# Démarrage
-# ----------------------------
-with app.app_context():
-    db.create_all()
-
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-  socketio.run(app, host='0.0.0.0', port=port, debug=False, allow_unsafe_werkzeug=True)
+    effect
