@@ -127,4 +127,15 @@ def handle_join(data):
 @socketio.on('trigger_effect')
 def handle_effect(data):
     room_code = data.get('room')
-    effect
+    effect = data.get('effect')
+    print(f"Effet '{effect}' declenche dans le salon {room_code}")
+    emit('play_effect', {'effect': effect}, room=room_code)
+
+
+with app.app_context():
+    db.create_all()
+
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    socketio.run(app, host='0.0.0.0', port=port, debug=False, allow_unsafe_werkzeug=True)
