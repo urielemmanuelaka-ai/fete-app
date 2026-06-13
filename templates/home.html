@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crée ta fête</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+        }
+
+        p {
+            color: #ccc;
+            margin-bottom: 30px;
+            max-width: 400px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+            border: none;
+            color: white;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 0, 204, 0.4);
+            transition: transform 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>🎉 Crée ta fête</h1>
+    <p>
+        Clique sur le bouton pour créer un salon de fête privé.
+        Tu obtiendras un lien unique à partager avec tes amis !
+    </p>
+
+    <form action="/creer-salon" method="POST">
+        <button type="submit">Créer un salon</button>
+    </form>
+</body>
+</html>

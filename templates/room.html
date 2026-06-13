@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salon de Fête</title>
+    <title>Salon {{ room_code }}</title>
 
-    <!-- Librairie pour l'effet confettis -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-
-    <!-- Client Socket.IO (doit correspondre à la version de flask-socketio côté serveur) -->
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
     <style>
@@ -30,10 +27,42 @@
         }
 
         h1 {
-            margin: 20px 0;
+            margin: 10px 0;
             font-size: 2rem;
             text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
             letter-spacing: 2px;
+        }
+
+        .share-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.08);
+            padding: 10px 15px;
+            border-radius: 50px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .share-box input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 0.9rem;
+            width: 260px;
+            text-align: center;
+        }
+
+        .share-box button {
+            background: linear-gradient(135deg, #00ffcc, #3333ff);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
         }
 
         #jitsi-container {
@@ -87,7 +116,6 @@
             color: #aaa;
         }
 
-        /* Overlay plein écran pour le flash lumineux */
         #flash-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -100,17 +128,20 @@
 </head>
 <body>
 
-    <h1>🎉 Salon de Fête</h1>
+    <h1>🎉 Salon : {{ room_code }}</h1>
 
-    <!-- Espace vidéo : Jitsi Meet intégré gratuitement -->
+    <div class="share-box">
+        <input type="text" id="share-link" value="" readonly>
+        <button onclick="copyLink()">Copier le lien</button>
+    </div>
+
     <div id="jitsi-container">
         <iframe
-            src="https://meet.jit.si/MaFeteEntreAmis-Demo"
+            src="https://meet.jit.si/FeteApp-{{ room_code }}"
             allow="camera; microphone; fullscreen; display-capture; autoplay">
         </iframe>
     </div>
 
-    <!-- Boutons pour déclencher les effets -->
     <div class="effects-bar">
         <button class="effect-btn" onclick="sendEffect('confetti')">🎊 Confettis</button>
         <button class="effect-btn" onclick="sendEffect('fireworks')">🎆 Feu d'artifice</button>
@@ -118,29 +149,39 @@
         <button class="effect-btn" onclick="sendEffect('flash')">💡 Flash lumineux</button>
     </div>
 
-    <p id="status">Connexion au serveur...</p>
+    <p id="status">Connexion au salon...</p>
 
-    <!-- Overlay pour l'effet flash -->
     <div id="flash-overlay"></div>
 
     <script>
-        // Connexion au serveur Flask-SocketIO
+        const roomCode = "{{ room_code }}";
+
+        // Afficher le lien à partager (l'URL actuelle de la page)
+        document.getElementById('share-link').value = window.location.href;
+
+        function copyLink() {
+            const input = document.getElementById('share-link');
+            input.select();
+            document.execCommand('copy');
+            document.getElementById('status').innerText = "🔗 Lien copié !";
+        }
+
         const socket = io();
 
         socket.on('connect', () => {
-            document.getElementById('status').innerText = "✅ Connecté au salon !";
+            // Rejoindre le salon correspondant à cette page
+            socket.emit('join', { room: roomCode });
+            document.getElementById('status').innerText = "✅ Connecté au salon " + roomCode;
         });
 
         socket.on('disconnect', () => {
             document.getElementById('status').innerText = "❌ Déconnecté du serveur.";
         });
 
-        // Quand on clique sur un bouton, on envoie l'effet au serveur
         function sendEffect(effectName) {
-            socket.emit('trigger_effect', { effect: effectName });
+            socket.emit('trigger_effect', { room: roomCode, effect: effectName });
         }
 
-        // Quand le serveur renvoie un effet, on le joue chez TOUT LE MONDE
         socket.on('play_effect', (data) => {
             playEffect(data.effect);
         });
@@ -207,7 +248,6 @@
                 span.style.zIndex = 1000;
                 document.body.appendChild(span);
 
-                // petite pause avant l'animation pour que la transition s'applique
                 requestAnimationFrame(() => {
                     span.style.transform = `translateY(-${100 + Math.random() * 20}vh) rotate(${Math.random() * 360}deg)`;
                     span.style.opacity = '0';
