@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
+    <title>LongVibe — Connexion</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0f;
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -21,40 +19,68 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        .orb1 { width: 350px; height: 350px; background: #3333ff; top: -100px; right: -100px; }
+        .orb2 { width: 250px; height: 250px; background: #ff00cc; bottom: -50px; left: -50px; }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff00cc, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-decoration: none;
         }
 
         .form-box {
-            background: rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
             padding: 40px;
-            border-radius: 16px;
+            border-radius: 20px;
             width: 100%;
-            max-width: 360px;
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.15);
+            max-width: 380px;
+            position: relative;
+            z-index: 5;
+            backdrop-filter: blur(10px);
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
-            text-shadow: 0 0 10px #ff00ff;
-        }
+        h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; }
+        .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 25px; }
 
         label {
             display: block;
             margin-bottom: 6px;
-            font-size: 0.9rem;
-            color: #ccc;
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 500;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 18px;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255,255,255,0.1);
+            padding: 13px 15px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.05);
             color: #fff;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: border 0.2s;
         }
+
+        input:focus { outline: none; border-color: #ff00cc; }
 
         button {
             width: 100%;
@@ -62,37 +88,51 @@
             border: none;
             color: white;
             padding: 14px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 700;
             border-radius: 50px;
             cursor: pointer;
+            font-family: 'Poppins', sans-serif;
             margin-top: 5px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,0,204,0.4);
         }
 
         .flash {
-            background: rgba(255,0,0,0.2);
-            border: 1px solid #ff5555;
+            background: rgba(255,0,0,0.15);
+            border: 1px solid rgba(255,0,0,0.3);
+            color: #ff6666;
             padding: 10px 15px;
             border-radius: 8px;
-            margin-bottom: 18px;
-            font-size: 0.9rem;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
         }
 
         .link {
             text-align: center;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: #aaa;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #555;
         }
 
-        .link a {
-            color: #00ffcc;
-        }
+        .link a { color: #ff00cc; text-decoration: none; font-weight: 600; }
+        .link a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
+
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+
+    <a href="/" class="logo">LongVibe</a>
+
     <div class="form-box">
-        <h1>Connexion</h1>
+        <h1>Bon retour 👋</h1>
+        <p class="subtitle">Connecte-toi pour rejoindre la fête</p>
 
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -104,17 +144,18 @@
 
         <form method="POST">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" placeholder="ton@email.com" required>
 
             <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
 
-            <button type="submit">Se connecter</button>
+            <button type="submit">Se connecter 🎉</button>
         </form>
 
         <div class="link">
-            Pas encore de compte ? <a href="{{ url_for('inscription') }}">Inscris-toi</a>
+            Pas encore de compte ? <a href="{{ url_for('inscription') }}">S'inscrire</a>
         </div>
     </div>
+
 </body>
 </html>
