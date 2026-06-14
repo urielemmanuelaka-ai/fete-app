@@ -10,6 +10,7 @@ from flask_login import (
     login_required, current_user
 )
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'change-moi-plus-tard'
@@ -21,6 +22,8 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+ADMIN_EMAIL = 'urielemmanuelaka@gmail.com'
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,11 +31,22 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     tokens = db.Column(db.Integer, default=0)
+    is_admin = db.Column(db.Boolean, default=False)
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or not current_user.is_admin:
+            flash("Acces refuse. Reserve a l'administrateur.")
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 def generate_room_code(length=6):
@@ -64,11 +78,13 @@ def inscription():
             flash("Ce nom d'utilisateur est deja pris.")
             return redirect(url_for('inscription'))
 
+        is_admin = (email == ADMIN_EMAIL)
         new_user = User(
             username=username,
             email=email,
             password_hash=generate_password_hash(password),
-            tokens=0
+            tokens=0,
+            is_admin=is_admin
         )
         db.session.add(new_user)
         db.session.commit()
@@ -117,23 +133,60 @@ def salon(code):
     return render_template('room.html', room_code=code)
 
 
+@app.route('/admin')
+@login_required
+@admin_required
+def admin():
+    users = User.query.order_by(User.id.desc()).all()
+    return render_template('admin.html', users=users)
+
+
+@app.route('/admin/ajouter-jetons', methods=['POST'])
+@login_required
+@admin_required
+def ajouter_jetons():
+    user_id = request.form.get('user_id')
+    montant = request.form.get('montant', 0)
+    user = User.query.get(int(user_id))
+    if user:
+        user.tokens += int(montant)
+        db.session.commit()
+        flash(f"{montant} jetons ajoutes a {user.username}.")
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/supprimer-utilisateur', methods=['POST'])
+@login_required
+@admin_required
+def supprimer_utilisateur():
+    user_id = request.form.get('user_id')
+    user = User.query.get(int(user_id))
+    if user and not user.is_admin:
+        db.session.delete(user)
+        db.session.commit()
+        flash(f"Utilisateur {user.username} supprime.")
+    return redirect(url_for('admin'))
+
+
 @socketio.on('join')
 def handle_join(data):
     room_code = data.get('room')
     join_room(room_code)
-    print(f"Un utilisateur a rejoint le salon : {room_code}")
 
 
 @socketio.on('trigger_effect')
 def handle_effect(data):
     room_code = data.get('room')
     effect = data.get('effect')
-    print(f"Effet '{effect}' declenche dans le salon {room_code}")
     emit('play_effect', {'effect': effect}, room=room_code)
 
 
 with app.app_context():
     db.create_all()
+    admin_user = User.query.filter_by(email=ADMIN_EMAIL).first()
+    if admin_user and not admin_user.is_admin:
+        admin_user.is_admin = True
+        db.session.commit()
 
 
 if __name__ == '__main__':

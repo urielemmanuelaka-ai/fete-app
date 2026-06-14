@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panneau Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        .flash {
+            background: rgba(0,255,100,0.15);
+            border: 1px solid #00ff64;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.08);
+            padding: 20px 30px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .stat-box .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ffcc;
+        }
+
+        .stat-box .label {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(255,255,255,0.1);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .badge-admin {
+            background: linear-gradient(135deg, #ff00cc, #3333ff);
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .badge-user {
+            background: rgba(255,255,255,0.1);
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+        }
+
+        .token-form {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .token-form input {
+            width: 80px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #00ffcc, #3333ff);
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .btn-delete {
+            background: rgba(255,50,50,0.2);
+            border: 1px solid rgba(255,50,50,0.4);
+            color: #ff6666;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-delete:hover {
+            background: rgba(255,50,50,0.4);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            text-decoration: none;
+        }
+
+        .back-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+
+    <h1>🛠️ Panneau Admin</h1>
+    <p class="subtitle">Bienvenue, {{ current_user.username }} — vue complète du site</p>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash">✅ {{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Statistiques globales -->
+    <div class="stats">
+        <div class="stat-box">
+            <div class="number">{{ users|length }}</div>
+            <div class="label">Utilisateurs inscrits</div>
+        </div>
+        <div class="stat-box">
+            <div class="number">{{ users|sum(attribute='tokens') }}</div>
+            <div class="label">Jetons en circulation</div>
+        </div>
+        <div class="stat-box">
+            <div class="number">{{ users|selectattr('tokens', 'gt', 0)|list|length }}</div>
+            <div class="label">Utilisateurs avec jetons</div>
+        </div>
+    </div>
+
+    <!-- Table des utilisateurs -->
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Utilisateur</th>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Jetons</th>
+                <th>Ajouter jetons</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td><strong>{{ user.username }}</strong></td>
+                <td style="color:#aaa; font-size:0.9rem;">{{ user.email }}</td>
+                <td>
+                    {% if user.is_admin %}
+                        <span class="badge-admin">Admin</span>
+                    {% else %}
+                        <span class="badge-user">Utilisateur</span>
+                    {% endif %}
+                </td>
+                <td style="color:#00ffcc; font-weight:bold;">{{ user.tokens }}</td>
+                <td>
+                    <form action="/admin/ajouter-jetons" method="POST" class="token-form">
+                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                        <input type="number" name="montant" value="100" min="1">
+                        <button type="submit" class="btn-add">+ Ajouter</button>
+                    </form>
+                </td>
+                <td>
+                    {% if not user.is_admin %}
+                    <form action="/admin/supprimer-utilisateur" method="POST">
+                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                        <button type="submit" class="btn-delete" onclick="return confirm('Supprimer {{ user.username }} ?')">Supprimer</button>
+                    </form>
+                    {% else %}
+                        <span style="color:#555; font-size:0.8rem;">Protégé</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('home') }}" class="back-link">← Retour à l'accueil</a>
+
+</body>
+</html>
