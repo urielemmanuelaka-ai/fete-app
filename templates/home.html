@@ -6,292 +6,67 @@
     <title>LongVibe — Fais la fête à distance</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap');
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; overflow-x: hidden; }
+        .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12; pointer-events: none; animation: float 8s ease-in-out infinite; }
+        .orb1 { width: 350px; height: 350px; background: #ff00cc; top: -100px; left: -100px; }
+        .orb2 { width: 250px; height: 250px; background: #3333ff; top: 50%; right: -50px; animation-delay: 2s; }
+        .orb3 { width: 200px; height: 200px; background: #00ffcc; bottom: -50px; left: 30%; animation-delay: 4s; }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #0a0a0f;
-            color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Fond animé */
-        .bg-orbs {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .orb1 { width: 400px; height: 400px; background: #ff00cc; top: -100px; left: -100px; animation-delay: 0s; }
-        .orb2 { width: 300px; height: 300px; background: #3333ff; top: 50%; right: -50px; animation-delay: 2s; }
-        .orb3 { width: 250px; height: 250px; background: #00ffcc; bottom: -50px; left: 30%; animation-delay: 4s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-30px) scale(1.05); }
-        }
-
-        /* Navigation */
         nav {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            backdrop-filter: blur(10px);
+            position: relative; z-index: 10;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-wrap: wrap; gap: 10px;
         }
-
-        .logo {
-            font-size: 1.6rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ff00cc, #00ffcc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
-        }
-
-        .nav-links { display: flex; gap: 12px; align-items: center; }
-
-        .nav-links a {
-            color: #aaa;
-            text-decoration: none;
-            padding: 8px 18px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
+        .logo { font-size: 1.5rem; font-weight: 900; background: linear-gradient(135deg, #ff00cc, #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .nav-links a { color: #aaa; text-decoration: none; padding: 7px 15px; border-radius: 50px; font-size: 0.88rem; transition: all 0.2s; }
         .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-links .btn-primary { background: linear-gradient(135deg, #ff00cc, #3333ff); color: #fff; font-weight: 600; }
+        .tokens-badge { background: rgba(0,255,204,0.12); border: 1px solid rgba(0,255,204,0.25); color: #00ffcc; padding: 5px 12px; border-radius: 50px; font-size: 0.82rem; font-weight: 600; }
 
-        .nav-links .btn-primary {
-            background: linear-gradient(135deg, #ff00cc, #3333ff);
-            color: #fff;
-            font-weight: 600;
-        }
+        .hero { position: relative; z-index: 5; text-align: center; padding: 60px 20px 40px; }
+        .hero-tag { display: inline-block; background: rgba(255,0,204,0.12); border: 1px solid rgba(255,0,204,0.25); color: #ff00cc; padding: 5px 14px; border-radius: 50px; font-size: 0.78rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+        .hero h1 { font-size: clamp(2rem, 7vw, 4.5rem); font-weight: 900; line-height: 1.15; margin-bottom: 16px; }
+        .hero h1 span { background: linear-gradient(135deg, #ff00cc, #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: clamp(0.9rem, 2.5vw, 1.05rem); color: #777; max-width: 480px; margin: 0 auto 35px; line-height: 1.7; }
 
-        .nav-links .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255,0,204,0.4);
-        }
+        .create-section { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 60px; padding: 0 20px; }
+        .btn-create { background: linear-gradient(135deg, #ff00cc, #3333ff); border: none; color: white; padding: 18px 45px; font-size: clamp(1rem, 3vw, 1.15rem); font-weight: 700; border-radius: 50px; cursor: pointer; font-family: 'Poppins', sans-serif; transition: all 0.2s; box-shadow: 0 8px 35px rgba(255,0,204,0.3); text-decoration: none; display: inline-block; width: 100%; max-width: 320px; text-align: center; }
+        .btn-create:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255,0,204,0.5); }
+        .btn-login-cta { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 16px 40px; font-size: clamp(0.9rem, 2.5vw, 1.05rem); font-weight: 600; border-radius: 50px; text-decoration: none; display: inline-block; transition: all 0.2s; width: 100%; max-width: 320px; text-align: center; }
+        .btn-login-cta:hover { background: rgba(255,255,255,0.1); }
+        .hint { font-size: 0.82rem; color: #444; text-align: center; }
 
-        .nav-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .features { position: relative; z-index: 5; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; padding: 0 20px 60px; max-width: 800px; margin: 0 auto; }
+        .feature-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 20px 15px; text-align: center; transition: all 0.2s; }
+        .feature-card:hover { background: rgba(255,255,255,0.07); transform: translateY(-4px); }
+        .feature-icon { font-size: 2rem; margin-bottom: 10px; }
+        .feature-title { font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; }
+        .feature-desc { font-size: 0.78rem; color: #555; line-height: 1.5; }
 
-        .nav-user .username {
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-
-        .nav-user .tokens-badge {
-            background: rgba(0,255,204,0.15);
-            border: 1px solid rgba(0,255,204,0.3);
-            color: #00ffcc;
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        /* Hero */
-        .hero {
-            position: relative;
-            z-index: 5;
-            text-align: center;
-            padding: 80px 20px 60px;
-        }
-
-        .hero-tag {
-            display: inline-block;
-            background: rgba(255,0,204,0.15);
-            border: 1px solid rgba(255,0,204,0.3);
-            color: #ff00cc;
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 20px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, #ff00cc, #00ffcc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: #888;
-            max-width: 500px;
-            margin: 0 auto 40px;
-            line-height: 1.7;
-        }
-
-        /* Bouton créer salon */
-        .create-section {
-            position: relative;
-            z-index: 5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 80px;
-        }
-
-        .btn-create {
-            background: linear-gradient(135deg, #ff00cc, #3333ff);
-            border: none;
-            color: white;
-            padding: 20px 50px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.2s;
-            box-shadow: 0 10px 40px rgba(255,0,204,0.3);
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-create:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 50px rgba(255,0,204,0.5);
-        }
-
-        .btn-login-cta {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
-            padding: 18px 45px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.2s;
-        }
-
-        .btn-login-cta:hover {
-            background: rgba(255,255,255,0.12);
-            transform: translateY(-2px);
-        }
-
-        .hint { font-size: 0.85rem; color: #555; }
-
-        /* Features */
-        .features {
-            position: relative;
-            z-index: 5;
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            padding: 0 20px 80px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 16px;
-            padding: 25px;
-            flex: 1;
-            min-width: 200px;
-            max-width: 250px;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .feature-card:hover {
-            background: rgba(255,255,255,0.07);
-            transform: translateY(-5px);
-        }
-
-        .feature-icon { font-size: 2.5rem; margin-bottom: 12px; }
-        .feature-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
-        .feature-desc { font-size: 0.85rem; color: #666; line-height: 1.5; }
-
-        /* Flash */
-        .flash {
-            position: relative;
-            z-index: 10;
-            background: rgba(255,0,0,0.15);
-            border: 1px solid rgba(255,0,0,0.3);
-            color: #ff6666;
-            padding: 12px 25px;
-            border-radius: 10px;
-            margin: 10px auto;
-            max-width: 500px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        /* Admin link */
-        .admin-link {
-            position: relative;
-            z-index: 5;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .admin-link a {
-            color: #555;
-            font-size: 0.8rem;
-            text-decoration: none;
-        }
-
+        .flash { position: relative; z-index: 10; background: rgba(255,0,0,0.12); border: 1px solid rgba(255,0,0,0.25); color: #ff6666; padding: 10px 20px; border-radius: 10px; margin: 8px auto; max-width: 480px; text-align: center; font-size: 0.88rem; }
+        .admin-link { position: relative; z-index: 5; text-align: center; margin-bottom: 25px; }
+        .admin-link a { color: #444; font-size: 0.78rem; text-decoration: none; }
         .admin-link a:hover { color: #ff00cc; }
     </style>
 </head>
 <body>
-
-    <div class="bg-orbs">
-        <div class="orb orb1"></div>
-        <div class="orb orb2"></div>
-        <div class="orb orb3"></div>
-    </div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
 
     <nav>
         <div class="logo">LongVibe</div>
         <div class="nav-links">
             {% if current_user.is_authenticated %}
-                <div class="nav-user">
-                    <span class="username">👤 {{ current_user.username }}</span>
-                    <span class="tokens-badge">🎟 {{ current_user.tokens }} jetons</span>
-                    {% if current_user.is_admin %}
-                        <a href="{{ url_for('admin') }}">⚙️ Admin</a>
-                    {% endif %}
-                    <a href="{{ url_for('logout') }}">Déconnexion</a>
-                </div>
+                <span style="color:#666;font-size:0.85rem;">👤 {{ current_user.username }}</span>
+                <span class="tokens-badge">🎟 {{ current_user.tokens }}</span>
+                {% if current_user.is_admin %}<a href="{{ url_for('admin') }}">⚙️ Admin</a>{% endif %}
+                <a href="{{ url_for('logout') }}">Déconnexion</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Connexion</a>
                 <a href="{{ url_for('inscription') }}" class="btn-primary">S'inscrire</a>
@@ -300,11 +75,7 @@
     </nav>
 
     {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <div class="flash">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+        {% if messages %}{% for message in messages %}<div class="flash">{{ message }}</div>{% endfor %}{% endif %}
     {% endwith %}
 
     <div class="hero">
@@ -315,7 +86,7 @@
 
     <div class="create-section">
         {% if current_user.is_authenticated %}
-            <form action="/creer-salon" method="POST">
+            <form action="/creer-salon" method="POST" style="width:100%;max-width:320px;">
                 <button type="submit" class="btn-create">🎉 Créer un salon</button>
             </form>
             <span class="hint">Un lien unique sera généré à partager avec tes amis</span>
@@ -326,33 +97,14 @@
     </div>
 
     <div class="features">
-        <div class="feature-card">
-            <div class="feature-icon">🎊</div>
-            <div class="feature-title">Effets en temps réel</div>
-            <div class="feature-desc">Confettis, feux d'artifice, flash... tout le monde voit en même temps.</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🎥</div>
-            <div class="feature-title">Vidéo de groupe</div>
-            <div class="feature-desc">Vidéo HD intégrée, sans installation, directement dans le navigateur.</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🔒</div>
-            <div class="feature-title">Salons privés</div>
-            <div class="feature-desc">Chaque salon a un lien unique. Seuls tes amis invités peuvent rejoindre.</div>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">💬</div>
-            <div class="feature-title">Chat en direct</div>
-            <div class="feature-desc">Discute avec tes amis pendant la fête sans quitter la page.</div>
-        </div>
+        <div class="feature-card"><div class="feature-icon">🎊</div><div class="feature-title">Effets en temps réel</div><div class="feature-desc">Confettis, feux d'artifice... tout le monde voit en même temps.</div></div>
+        <div class="feature-card"><div class="feature-icon">🎥</div><div class="feature-title">Vidéo de groupe</div><div class="feature-desc">Vidéo HD intégrée, sans installation requise.</div></div>
+        <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-title">Salons privés</div><div class="feature-desc">Lien unique, seuls tes amis invités peuvent rejoindre.</div></div>
+        <div class="feature-card"><div class="feature-icon">💬</div><div class="feature-title">Chat en direct</div><div class="feature-desc">Discute pendant la fête sans quitter la page.</div></div>
     </div>
 
     {% if current_user.is_authenticated and current_user.is_admin %}
-    <div class="admin-link">
-        <a href="{{ url_for('admin') }}">⚙️ Panneau d'administration</a>
-    </div>
+    <div class="admin-link"><a href="{{ url_for('admin') }}">⚙️ Panneau d'administration</a></div>
     {% endif %}
-
 </body>
 </html>

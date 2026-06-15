@@ -6,156 +6,45 @@
     <title>LongVibe — Connexion</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap');
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #0a0a0f;
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.12;
-            pointer-events: none;
-        }
-
-        .orb1 { width: 350px; height: 350px; background: #3333ff; top: -100px; right: -100px; }
-        .orb2 { width: 250px; height: 250px; background: #ff00cc; bottom: -50px; left: -50px; }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ff00cc, #00ffcc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-            text-decoration: none;
-        }
-
-        .form-box {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 40px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 380px;
-            position: relative;
-            z-index: 5;
-            backdrop-filter: blur(10px);
-        }
-
-        h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; }
-        .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 25px; }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-            color: #888;
-            font-weight: 500;
-        }
-
-        input {
-            width: 100%;
-            padding: 13px 15px;
-            margin-bottom: 16px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            font-size: 0.95rem;
-            font-family: 'Poppins', sans-serif;
-            transition: border 0.2s;
-        }
-
+        body { font-family: 'Poppins', sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12; pointer-events: none; }
+        .orb1 { width: 300px; height: 300px; background: #3333ff; top: -80px; right: -80px; }
+        .orb2 { width: 200px; height: 200px; background: #ff00cc; bottom: -40px; left: -40px; }
+        .logo { font-size: 1.6rem; font-weight: 900; background: linear-gradient(135deg, #ff00cc, #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; text-decoration: none; }
+        .form-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 35px 30px; border-radius: 20px; width: 100%; max-width: 380px; position: relative; z-index: 5; }
+        h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+        .subtitle { color: #555; font-size: 0.88rem; margin-bottom: 22px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.82rem; color: #777; font-weight: 500; }
+        input { width: 100%; padding: 12px 14px; margin-bottom: 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.05); color: #fff; font-size: 0.92rem; font-family: 'Poppins', sans-serif; transition: border 0.2s; }
         input:focus { outline: none; border-color: #ff00cc; }
-
-        button {
-            width: 100%;
-            background: linear-gradient(135deg, #ff00cc, #3333ff);
-            border: none;
-            color: white;
-            padding: 14px;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 50px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            margin-top: 5px;
-            transition: all 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255,0,204,0.4);
-        }
-
-        .flash {
-            background: rgba(255,0,0,0.15);
-            border: 1px solid rgba(255,0,0,0.3);
-            color: #ff6666;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            font-size: 0.85rem;
-        }
-
-        .link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: #555;
-        }
-
+        input::placeholder { color: #333; }
+        button { width: 100%; background: linear-gradient(135deg, #ff00cc, #3333ff); border: none; color: white; padding: 14px; font-size: 0.98rem; font-weight: 700; border-radius: 50px; cursor: pointer; font-family: 'Poppins', sans-serif; margin-top: 5px; transition: all 0.2s; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,0,204,0.4); }
+        button:active { transform: scale(0.98); }
+        .flash { background: rgba(255,0,0,0.12); border: 1px solid rgba(255,0,0,0.25); color: #ff6666; padding: 9px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 0.83rem; }
+        .link { text-align: center; margin-top: 18px; font-size: 0.83rem; color: #444; }
         .link a { color: #ff00cc; text-decoration: none; font-weight: 600; }
-        .link a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-
     <div class="orb orb1"></div>
     <div class="orb orb2"></div>
-
     <a href="/" class="logo">LongVibe</a>
-
     <div class="form-box">
         <h1>Bon retour 👋</h1>
         <p class="subtitle">Connecte-toi pour rejoindre la fête</p>
-
         {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="flash">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
+            {% if messages %}{% for message in messages %}<div class="flash">{{ message }}</div>{% endfor %}{% endif %}
         {% endwith %}
-
         <form method="POST">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" placeholder="ton@email.com" required>
-
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" placeholder="••••••••" required>
-
             <button type="submit">Se connecter 🎉</button>
         </form>
-
-        <div class="link">
-            Pas encore de compte ? <a href="{{ url_for('inscription') }}">S'inscrire</a>
-        </div>
+        <div class="link">Pas encore de compte ? <a href="{{ url_for('inscription') }}">S'inscrire</a></div>
     </div>
-
 </body>
 </html>
